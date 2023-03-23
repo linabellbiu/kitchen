@@ -1,8 +1,14 @@
-FROM node
+FROM node as node_build
 
-RUN npm config set registry http://mirrors.cloud.tencent.com/npm/
 
 WORKDIR /app
 
-CMD ["/bin/bash","-c","npm install && npm run build"]
+COPY ./app /app
 
+RUN npm config set registry http://mirrors.cloud.tencent.com/npm/ && \
+    npm install && \
+    npm run build \
+
+FROM nginx
+
+COPY --from=node_build /app/dist /usr/share/nginx/html

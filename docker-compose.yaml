@@ -1,7 +1,8 @@
-version: 3
+version: "3"
 services:
   npm:
     container_name: node
     image: node:latest
+
     command: npm install
 
