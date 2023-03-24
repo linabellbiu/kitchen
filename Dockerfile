@@ -4,7 +4,8 @@ WORKDIR /app
 
 RUN npm config set registry http://mirrors.cloud.tencent.com/npm/
 
-CMD ["/bin/bash","-c","npm install && npm run build"]
+ENTRYPOINT ["/bin/bash","-c","ls"]
+#ENTRYPOINT ["/bin/bash","-c","npm install && npm run build"]
 
 #FROM nginx
 #
