@@ -7,5 +7,11 @@ services:
       - 80:80
     volumes:
       - ./app/dist:/usr/share/nginx/html
-
+  server:
+    build:
+      context: ./service
+      dockerfile: Dockerfile
+    container_name: kitchen-server
+    ports:
+      - 8080:8080
 
