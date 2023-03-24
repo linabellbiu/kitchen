@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "kitchen": "file:app"
+  }
+}
