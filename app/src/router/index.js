@@ -19,11 +19,6 @@ export default new Router({
           path: '/more',
           name: 'more',
           component: () => import('@/pages/views/more.vue')
-        },
-        {
-          path: '/mine',
-          name: 'mine',
-          component: () => import('@/pages/views/mine.vue')
         }
       ]
     },

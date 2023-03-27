@@ -85,9 +85,6 @@ export default {
         this.getFood()
       }
     },
-    query () {
-      // this.getFood()
-    },
     clickC (index) {
       this.class = index - 1
       this.food_data = []

@@ -19,22 +19,16 @@
     <input class="input" @focus="focus" placeholder="请输入食物名称" v-model="name">
     <p class="p" v-show="pShow">请输入食物名称</p>
     <button class="button" @click="addFood">添加食物</button>
-    <div class="view" ref="view">
-      <MoodCard :data="item" v-for="(item, index) in mood_value" :key=index></MoodCard>
-      <div class="all" v-if="allShow">已加载全部</div>
-    </div>
   </div>
 </template>
 
 <script>
-import MoodCard from '../../components/MoodCard'
 
 let view
 
 export default {
   name: 'more',
   components: {
-    MoodCard
   },
   data () {
     return {
@@ -69,7 +63,6 @@ export default {
   },
   mounted () {
     this.init()
-    this.query()
   },
   destroyed () {
     view.removeListener('scroll', this.scroll(), false)
@@ -104,28 +97,6 @@ export default {
       }
       this.$refs.icon[index].style.color = 'red'
       this.$refs.icon[index].style.border = '0.5px solid red'
-    },
-    query () {
-      this.getMood()
-    },
-    getMood () {
-      this.pageSize = this.page
-      this.$http.getMood({
-        page: this.page,
-        size: this.size
-      }).then((res) => {
-        this.$Dialog.Rotate({
-          ele: view,
-          state: 'end'
-        })
-        if (res.flag === 1) {
-          this.pageSize -= 1
-          if (res.data.length < 5) {
-            this.allShow = true
-          }
-          this.mood_value = this.mood_value.concat(res.data)
-        }
-      })
     },
     clickI () {
       let imgInput = this.$refs.imgInput

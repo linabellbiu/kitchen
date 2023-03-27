@@ -22,26 +22,26 @@ type Data struct {
 var DB *gorm.DB
 
 func main() {
-	//data := Data{
-	//	Food: []Food{
-	//		{
-	//			Name:  "红烧腊肉",
-	//			Img:   "https://preview.qiantucdn.com/agency/dt/xsj/0k/24/up.jpg!kuan600",
-	//			Index: 2,
-	//		},
-	//		{
-	//			Name:  "红烧猪脚",
-	//			Img:   "https://preview.qiantucdn.com/agency/dt/xsj/0k/24/up.jpg!kuan600",
-	//			Index: 2,
-	//		},
-	//	},
-	//}
-
 	r := gin.Default()
 	r.Use(cors(), gin.Recovery()) //开启中间件 允许使用跨域请求
-	r.GET("/kkapi/serveltDemo/getFood", GetFood)
+	r.GET("/api/getFood", GetFood)
+	r.POST("/api/addFood", AddFood)
 
 	r.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+}
+
+func AddFood(ctx *gin.Context) {
+	type Query struct {
+		Name  string `json:"name"`
+		Img   string `json:"img"`
+		Class int    `json:"class"`
+	}
+	var query = &Query{}
+	err := ctx.BindJSON(query)
+	if err != nil {
+		return
+	}
+
 }
 
 func GetFood(ctx *gin.Context) {

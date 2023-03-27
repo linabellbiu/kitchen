@@ -9,7 +9,7 @@ export default {
       writable: false // 是否可以改变，默认false，更改会报undefined
     })
     // httpA.defaults.baseURL = 'http://175.178.66.71:8080/kkapi/serveltDemo'
-    httpA.defaults.baseURL = 'http://127.0.0.1:8080/kkapi/serveltDemo'
+    httpA.defaults.baseURL = 'http://127.0.0.1:8080/api/'
     httpA.defaults.headers.common['token'] = localStorage.invest_h5_token
     // 设置请求拦截器
     // httpA.interceptors.request.use(
