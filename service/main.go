@@ -25,23 +25,47 @@ func main() {
 	r := gin.Default()
 	r.Use(cors(), gin.Recovery()) //开启中间件 允许使用跨域请求
 	r.GET("/api/getFood", GetFood)
+	r.POST("/api/UploadImg", UploadImg)
 	r.POST("/api/addFood", AddFood)
 
 	r.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
+func UploadImg(ctx *gin.Context) {
+	file, _ := ctx.FormFile("file")
+	log.Println(file.Filename)
+
+	// 上传文件到指定的路径
+	// c.SaveUploadedFile(file, dst)
+
+	ctx.JSON(http.StatusOK, struct {
+		Msg  string `json:"msg"`
+		Flag int    `json:"flag"`
+	}{
+		Flag: 1,
+		Msg:  "",
+	})
+}
+
 func AddFood(ctx *gin.Context) {
-	type Query struct {
-		Name  string `json:"name"`
-		Img   string `json:"img"`
-		Class int    `json:"class"`
-	}
-	var query = &Query{}
-	err := ctx.BindJSON(query)
+	name := ctx.Query("name")
+	img := ctx.Query("img")
+	class, _ := strconv.Atoi(ctx.Query("class"))
+	err := GetDBSession().Create(&KMenu{
+		Name:  name,
+		Img:   img,
+		Index: class,
+	}).Error
 	if err != nil {
 		return
 	}
-
+	ctx.JSON(http.StatusOK, struct {
+		Msg  string `json:"msg"`
+		Flag int    `json:"flag"`
+	}{
+		Flag: 1,
+		Msg:  "添加成功",
+	})
 }
 
 func GetFood(ctx *gin.Context) {
@@ -63,6 +87,8 @@ func GetFood(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, Data{
 		Food: data,
+		Page: page,
+		Size: size,
 	},
 	)
 }
