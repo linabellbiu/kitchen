@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -26,6 +27,7 @@ func main() {
 	r.Use(cors(), gin.Recovery()) //开启中间件 允许使用跨域请求
 	r.GET("/api/getFood", GetFood)
 	r.POST("/api/UploadImg", UploadImg)
+	r.Static("/more_static", "./more_static")
 	r.POST("/api/addFood", AddFood)
 
 	r.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
@@ -35,15 +37,20 @@ func UploadImg(ctx *gin.Context) {
 	file, _ := ctx.FormFile("file")
 	log.Println(file.Filename)
 
-	// 上传文件到指定的路径
-	// c.SaveUploadedFile(file, dst)
+	u, _ := uuid.NewUUID()
+	dst := "more_static/" + u.String() + ".jpg"
+	err := ctx.SaveUploadedFile(file, dst)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	ctx.JSON(http.StatusOK, struct {
 		Msg  string `json:"msg"`
 		Flag int    `json:"flag"`
 	}{
 		Flag: 1,
-		Msg:  "",
+		Msg:  dst,
 	})
 }
 
@@ -106,7 +113,7 @@ func (m *KMenu) TableName() string {
 }
 
 func init() {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "k_kitchen_123456", "127.0.0.1", "3306", "kitchen"))
+	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "k_kitchen_123456", "mysql", "3306", "kitchen"))
 	if err != nil {
 		fmt.Println("数据库链接错误#1", err)
 		return

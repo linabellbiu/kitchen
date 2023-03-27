@@ -1,6 +1,4 @@
 version: "3"
-networks:
-  kitchen:
 services:
   mysql:
     container_name: kitchen-mysql
@@ -11,11 +9,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 'k_kitchen_123456'
       MYSQL_DATABASE: 'kitchen'
-    networks:
-      - kitchen
+    volumes:
+      - ./mysql-data:/var/lib/mysql
   nginx:
-    networks:
-      - kitchen
     container_name: kitchen-nginx
     restart: always
     image: nginx
@@ -29,9 +25,10 @@ services:
       dockerfile: Dockerfile
     container_name: kitchen-server
     restart: always
+    depends_on:
+      - mysql
+      - nginx
     ports:
       - 8080:8080
-    networks:
-      - mysql
-      - kitchen
-
+    # 需要等待mysql ready状态
+    command: /bin/sh -c "sleep 2 && ./kitchen-server"
