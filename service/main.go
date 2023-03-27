@@ -10,12 +10,13 @@ import (
 	"gorm.io/gorm/logger"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type Data struct {
-	Food []KMenu `json:"data"`
-	Page int     `json:"page"`
-	Size int     `json:"size"`
+	Food []*KMenu `json:"data"`
+	Page int      `json:"page"`
+	Size int      `json:"size"`
 }
 
 var DB *gorm.DB
@@ -44,13 +45,24 @@ func main() {
 }
 
 func GetFood(ctx *gin.Context) {
-	var KMenu = make([]KMenu, 0)
-	err := GetDBSession().Model(&KMenu).Where("is_del = 0").Find(&KMenu).Error
+	page, _ := strconv.Atoi(ctx.Query("page"))
+	size, _ := strconv.Atoi(ctx.Query("size"))
+	class := ctx.Query("class")
+	if page == 0 {
+		page = 1
+	}
+
+	var data = make([]*KMenu, 0)
+	db := GetDBSession().Model(&data).Where("is_del = 0")
+	if class != "-1" {
+		db.Where("index = ?", class)
+	}
+	err := db.Limit(size).Offset((page - 1) * size).Find(&data).Error
 	if err != nil {
 		return
 	}
 	ctx.JSON(http.StatusOK, Data{
-		Food: KMenu,
+		Food: data,
 	},
 	)
 }
@@ -68,7 +80,7 @@ func (m *KMenu) TableName() string {
 }
 
 func init() {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "k_kitchen_123456", "kitchen", "3306", "kitchen"))
+	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "k_kitchen_123456", "127.0.0.1", "3306", "kitchen"))
 	if err != nil {
 		fmt.Println("数据库链接错误#1", err)
 		return
