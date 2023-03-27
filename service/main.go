@@ -86,7 +86,7 @@ func GetFood(ctx *gin.Context) {
 	var data = make([]*KMenu, 0)
 	db := GetDBSession().Model(&data).Where("is_del = 0")
 	if class != "-1" {
-		db.Where("index = ?", class)
+		db.Where("`index` = ?", class)
 	}
 	err := db.Limit(size).Offset((page - 1) * size).Find(&data).Error
 	if err != nil {
