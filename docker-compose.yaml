@@ -1,7 +1,23 @@
 version: "3"
+networks:
+  kitchen:
 services:
+  mysql:
+    container_name: kitchen-mysql
+    image: mysql:latest
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'k_kitchen_123456'
+      MYSQL_DATABASE: 'kitchen'
+    networks:
+      - kitchen
   nginx:
+    networks:
+      - kitchen
     container_name: kitchen-nginx
+    restart: always
     image: nginx
     ports:
       - 80:80
@@ -12,6 +28,10 @@ services:
       context: ./service
       dockerfile: Dockerfile
     container_name: kitchen-server
+    restart: always
     ports:
       - 8080:8080
+    networks:
+      - mysql
+      - kitchen
 
