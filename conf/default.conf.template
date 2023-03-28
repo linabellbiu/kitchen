@@ -1,0 +1,23 @@
+server {
+    listen       ${NGINX_PORT};
+    listen  [::]:${NGINX_PORT};
+    server_name  ${NGINX_HOST};
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+    location ^~${NGINX_STATIC} {
+        root   /usr/share/nginx;
+        index  index.html index.htm;
+    }
+    location ^~${SERVICE_API_ROUTE} {
+       proxy_pass http://server:${SERVICE_API_PORT}${SERVICE_API_ROUTE};
+    }
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}

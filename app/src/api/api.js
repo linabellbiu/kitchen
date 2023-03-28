@@ -1,6 +1,5 @@
 import Axios from 'axios'
 // import qs from 'qs'
-const config = require('../../config')
 
 const httpA = Axios.create()
 export default {
@@ -9,10 +8,10 @@ export default {
       value: this, // 设置值
       writable: false // 是否可以改变，默认false，更改会报undefined
     })
-    httpA.defaults.baseURL = process.env.NODE_ENV === 'production'
-      ? config.build.VUE_APP_URL
-      : config.dev.VUE_APP_URL
-    // httpA.defaults.baseURL = 'http://127.0.0.1:8080/api/'
+    // httpA.defaults.baseURL = process.env.NODE_ENV === 'production'
+    //   ? config.build.VUE_APP_URL
+    //   : config.dev.VUE_APP_URL
+    httpA.defaults.baseURL = '/api'
     httpA.defaults.headers.common['token'] = localStorage.invest_h5_token
     // 设置请求拦截器
     // httpA.interceptors.request.use(

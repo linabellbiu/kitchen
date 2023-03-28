@@ -127,7 +127,7 @@ export default {
             text: '上传成功',
             type: 'quit'
           })
-          this.imgSrc = 'http://175.178.66.71:8080/' + res.msg
+          this.imgSrc = res.msg
           console.log('成功')
         } else {
           this.$Dialog.Dialog({
