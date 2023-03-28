@@ -54,7 +54,7 @@ module.exports = {
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
-    VUE_APP_URL :'http://175.178.66.71:8080',
+    VUE_APP_URL :'http://175.178.66.71:8080/api/',
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
