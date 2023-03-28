@@ -6,7 +6,7 @@ const path = require('path')
 
 module.exports = {
   dev: {
-    VUE_APP_URL :'http://127.0.0.1:8080',
+    VUE_APP_URL :'http://127.0.0.1:8080/api/',
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
