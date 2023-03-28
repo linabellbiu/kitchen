@@ -6,7 +6,7 @@ const path = require('path')
 
 module.exports = {
   dev: {
-    baseURL:"http://175.178.66.71:8080/kkapi/serveltDemo",
+    VUE_APP_URL :'http://127.0.0.1:8080',
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -54,7 +54,7 @@ module.exports = {
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
-
+    VUE_APP_URL :'http://175.178.66.71:8080',
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',

@@ -10,7 +10,7 @@ services:
       MYSQL_ROOT_PASSWORD: 'k_kitchen_123456'
       MYSQL_DATABASE: 'kitchen'
     volumes:
-      - ./mysql-data:/var/lib/mysql
+      - ./_store/mysql-data:/var/lib/mysql
   nginx:
     container_name: kitchen-nginx
     restart: always
@@ -25,6 +25,8 @@ services:
       dockerfile: Dockerfile
     container_name: kitchen-server
     restart: always
+    volumes:
+      - ./_store/more_static:/root/more_static
     depends_on:
       - mysql
       - nginx

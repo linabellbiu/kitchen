@@ -58,7 +58,7 @@ func AddFood(ctx *gin.Context) {
 	name := ctx.Query("name")
 	img := ctx.Query("img")
 	class, _ := strconv.Atoi(ctx.Query("class"))
-	err := GetDBSession().Create(&KMenu{
+	err := getDBSession().Create(&KMenu{
 		Name:  name,
 		Img:   img,
 		Index: class,
@@ -79,16 +79,13 @@ func GetFood(ctx *gin.Context) {
 	page, _ := strconv.Atoi(ctx.Query("page"))
 	size, _ := strconv.Atoi(ctx.Query("size"))
 	class := ctx.Query("class")
-	if page == 0 {
-		page = 1
-	}
 
 	var data = make([]*KMenu, 0)
-	db := GetDBSession().Model(&data).Where("is_del = 0")
+	db := getDBSession().Model(&data).Where("is_del = 0")
 	if class != "-1" {
 		db.Where("`index` = ?", class)
 	}
-	err := db.Limit(size).Offset((page - 1) * size).Find(&data).Error
+	err := db.Limit(size).Offset(page).Find(&data).Error
 	if err != nil {
 		return
 	}
@@ -100,6 +97,8 @@ func GetFood(ctx *gin.Context) {
 	)
 }
 
+//-----------------------------------
+
 type KMenu struct {
 	ID    int    `gorm:"column:id;primary_key;AUTO_INCREMENT" json:"id"`
 	Name  string `gorm:"column:name;NOT NULL" json:"name"`
@@ -110,6 +109,10 @@ type KMenu struct {
 
 func (m *KMenu) TableName() string {
 	return "k_menu"
+}
+
+func getDBSession() *gorm.DB {
+	return DB.Session(&gorm.Session{PrepareStmt: true})
 }
 
 func init() {
@@ -125,10 +128,6 @@ func init() {
 		fmt.Println("数据库链接错误#3", err)
 		return
 	}
-}
-
-func GetDBSession() *gorm.DB {
-	return DB.Session(&gorm.Session{PrepareStmt: true})
 }
 
 func cors() gin.HandlerFunc {
