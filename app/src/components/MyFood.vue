@@ -46,7 +46,7 @@ export default {
         if (i.img === '') {
           Array.push(require('@/common/image/青椒鸡蛋.jpg'))
         } else {
-          Array.push('http://127.0.0.1:8080/' + i.img)
+          Array.push('http://175.178.66.71:8080/' + i.img)
         }
       }
       return Array
