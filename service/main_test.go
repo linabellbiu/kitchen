@@ -17,7 +17,7 @@ func Test_mail(t *testing.T) {
 	em.Text = []byte("今天想吃【" + text + "】")
 
 	//设置服务器相关的配置
-	err := em.Send("smtp.qq.com:587", smtp.PlainAuth("", "834971685@qq.com", "efpugpjtczunbfii", "smtp.qq.com"))
+	err := em.Send("smtp.qq.com:587", smtp.PlainAuth("", "834971685@qq.com", "", "smtp.qq.com"))
 	if err != nil {
 		log.Fatal(err)
 	}
