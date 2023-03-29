@@ -5,15 +5,42 @@
 
 ## 开始
 使用前请先安装 docker
-#### 初始化并运行
+
+### 初始化并运行
 >注意: 初始化会清空数据库
 ```shell
 ./run init
 ```
 
-#### 启动或者重新编译镜像运行
+### 启动或者重新编译镜像运行
 ```shell
 ./run up
+```
+
+### 点菜提醒功能
+#### 配置docker-compose.yaml
+在docker-compose.yaml文件中配置:`mail_from`,`mail_to`,`mail_token`
+``` 
+server:
+    build:
+      context: ./service
+      dockerfile: Dockerfile
+    container_name: kitchen-server
+    restart: always
+    volumes:
+      - ./_store/more_static:/root/more_static
+    environment:
+      # 邮件发送人
+      - mail_from=xxx@qq.com
+      # 邮件收件人
+      - mail_to=xxx@qq.com
+      # 邮箱客户端授权码
+      - mail_token=xxxxx
+    depends_on:
+      - mysql
+      - nginx
+    ports:
+      - "8080:8080"
 ```
 
 ## 数据存储
@@ -45,7 +72,7 @@ services:
       - "80:80"
     environment:
       # 域名或者ip
-      - NGINX_HOST=
+      - NGINX_HOST=localhost
       # nginx监听请求端口
       - NGINX_PORT=80
       # api转发端口
