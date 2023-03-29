@@ -46,7 +46,7 @@ services:
     environment:
       - mail_from=834971685@qq.com
       - mail_to=834971685@qq.com
-      - mail_token=efpugpjtczunbfii
+      - mail_token=
     depends_on:
       - mysql
       - nginx
