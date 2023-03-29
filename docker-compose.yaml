@@ -43,6 +43,10 @@ services:
     restart: always
     volumes:
       - ./_store/more_static:/root/more_static
+    environment:
+      - mail_from=834971685@qq.com
+      - mail_to=834971685@qq.com
+      - mail_token=efpugpjtczunbfii
     depends_on:
       - mysql
       - nginx

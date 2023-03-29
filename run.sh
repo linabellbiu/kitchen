@@ -29,7 +29,7 @@ fi
 if [ "$arg" = "up" ];then
    docker compose build
    docker image prune -f
-   docker compose start
+   docker compose stop
    docker compose up -d
 fi
 

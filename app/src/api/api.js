@@ -14,9 +14,6 @@ export default {
     httpA.defaults.baseURL = '/api'
     httpA.defaults.headers.common['token'] = localStorage.invest_h5_token
     // 设置请求拦截器
-    // httpA.interceptors.request.use(
-    //   config => {
-    //     // config.headers.common['token'] = localStorage.invest_h5_token
     //     return config
     //   },
     //   err => {
@@ -65,7 +62,7 @@ export default {
   // 发送邮件
   Mail (params) {
     return httpA({
-      url: '/Mail',
+      url: '/mail',
       params: params,
       method: 'POST'
     })

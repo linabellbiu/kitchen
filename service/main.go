@@ -6,11 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
+	"github.com/jordan-wright/email"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"log"
 	"net/http"
+	"net/smtp"
+	"os"
 	"strconv"
 )
 
@@ -23,14 +26,40 @@ type Data struct {
 var DB *gorm.DB
 
 func main() {
+	Init()
 	r := gin.Default()
 	r.Use(cors(), gin.Recovery()) //开启中间件 允许使用跨域请求
 	r.GET("/api/getFood", GetFood)
 	r.POST("/api/UploadImg", UploadImg)
 	r.Static("/more_static", "./more_static")
 	r.POST("/api/addFood", AddFood)
+	r.POST("/api/mail", Mail)
 
 	r.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+}
+
+func Mail(ctx *gin.Context) {
+	text := ctx.Query("text")
+	em := email.NewEmail()
+	em.From = os.Getenv("mail_from")
+	em.To = []string{os.Getenv("mail_to")}
+	em.Subject = "👶🏻宝宝饿了,今天想吃【" + text + "】"
+	em.Text = []byte("今天想吃【" + text + "】")
+	//fmt.Println(os.Environ())
+	//fmt.Println(em.From)
+	//fmt.Println(em.To)
+	//fmt.Println(os.Getenv("mail_token"))
+	//设置服务器相关的配置
+	err := em.Send("smtp.qq.com:587", smtp.PlainAuth("", em.From, os.Getenv("mail_token"), "smtp.qq.com"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("send successfully ... ")
+	ctx.JSON(http.StatusOK, struct {
+		Flag int `json:"flag"`
+	}{
+		Flag: 1,
+	})
 }
 
 func UploadImg(ctx *gin.Context) {
@@ -87,6 +116,7 @@ func GetFood(ctx *gin.Context) {
 	}
 	err := db.Limit(size).Offset(page).Find(&data).Error
 	if err != nil {
+		log.Print(err)
 		return
 	}
 	ctx.JSON(http.StatusOK, Data{
@@ -115,17 +145,17 @@ func getDBSession() *gorm.DB {
 	return DB.Session(&gorm.Session{PrepareStmt: true})
 }
 
-func init() {
+func Init() {
 	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "k_kitchen_123456", "mysql", "3306", "kitchen"))
 	if err != nil {
-		fmt.Println("数据库链接错误#1", err)
+		log.Fatal("数据库链接错误#1", err)
 		return
 	}
 	DB, err = gorm.Open(mysql.New(mysql.Config{
 		Conn: db,
 	}), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
 	if err != nil {
-		fmt.Println("数据库链接错误#3", err)
+		log.Fatal("数据库链接错误#3", err)
 		return
 	}
 }
