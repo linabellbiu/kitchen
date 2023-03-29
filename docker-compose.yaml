@@ -52,5 +52,3 @@ services:
       - nginx
     ports:
       - "8080:8080"
-    # 需要等待mysql ready状态
-    command: /bin/sh -c "sleep 2 && ./kitchen-server"

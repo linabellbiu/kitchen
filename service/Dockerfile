@@ -13,4 +13,4 @@ COPY --from=build /app/kitchen-server /root/
 
 EXPOSE 8080
 
-#CMD ["/bin/sh","-c","./kitchen-server"]
+CMD ["/bin/sh","-c","./kitchen-server"]
