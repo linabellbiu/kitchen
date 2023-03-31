@@ -9,12 +9,12 @@
 ### 初始化并运行
 >注意: 初始化会清空数据库
 ```shell
-./run init
+./run.sh init
 ```
 
 ### 启动或者重新编译镜像运行
 ```shell
-./run up
+./run.sh up
 ```
 
 ### 点菜提醒功能
